@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+            http://www.springframework.org/schema/aop 
+            http://www.springframework.org/schema/aop/spring-aop-4.2.xsd 
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context-4.2.xsd 
+            http://www.springframework.org/schema/data/mongo 
+            http://www.springframework.org/schema/data/mongo/spring-mongo-1.8.xsd">
+
+
+	<!-- 定时任务的factorybean,配置其他config -->  
+    <bean id="jobFactory" class="com.kongtrolink.interweb.job.common.JobFactory"></bean>  
+ 
+
+	<!-- 配置调度工厂 -->
+	<bean id="testSchedulerFactoryBean"	class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	 	<property name="jobFactory" ref="jobFactory"></property>
+	</bean>
+
+
+ 	<!--这个类是用来设置触发时间的， startJobs方法启动调度容器，然后按照上面触发器每隔1s执行所配置的myJob2.doSomething()方法 -->     
+    <bean id="quartzManager" class="com.kongtrolink.interweb.job.common.QuartzManager" lazy-init="false" >  
+        <!--这个对象一定要注入，这样类才能进行管理，还有在类型要用get set方法，不然会报错。-->  
+        <property name="scheduler" ref="testSchedulerFactoryBean" />  
+    </bean>   
+    
+    
+</beans>

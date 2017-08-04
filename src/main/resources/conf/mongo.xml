@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo" 
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+            http://www.springframework.org/schema/data/mongo 
+            http://www.springframework.org/schema/data/mongo/spring-mongo-1.8.xsd">
+    
+    <!-- credentials 属性内容为 'username':'password'@'dbName(user belongs)' -->
+    <mongo:mongo-client id="mongo" host="${mongo.host}" port="${mongo.port}" credentials="${mongo.credentials}"/>
+        
+    <mongo:db-factory dbname="${mongo.database}" mongo-ref="mongo" />
+
+    <!-- 自动扫描以下包的类 -->
+    <mongo:mapping-converter base-package="com.kongtrolink.cameraweb.dao" />
+
+    <bean id="mappingContext" class="org.springframework.data.mongodb.core.mapping.MongoMappingContext" />
+    <!-- 配置mongodb映射类型 -->
+    <bean id="mappingMongoConverter" class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+        <constructor-arg name="mappingContext" ref="mappingContext" />
+        <property name="typeMapper" ref="defaultMongoTypeMapper" />
+    </bean>
+
+    <!-- 默认Mongodb类型映射 -->
+    <bean id="defaultMongoTypeMapper" class="org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper">
+        <constructor-arg name="typeKey">
+            <null /><!-- 这里设置为空,可以把 spring data mongodb 多余保存的_class字段去掉 -->
+        </constructor-arg>
+    </bean>
+    <!-- 操作mongodb -->
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+        <constructor-arg name="mongoConverter" ref="mappingMongoConverter" />
+    </bean>
+
+  <!-- C1接口 加载mongdb 操作工作类 -->
+	<bean id="mongDbHelper" class="com.kongtrolink.cone.dao.MongDbHelper">
+		<property name="mongoTemplate" ref="mongoTemplate" />
+	</bean>
+	
+	
+</beans>
