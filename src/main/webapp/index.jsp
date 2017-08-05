@@ -38,6 +38,9 @@
 .divssa {
 	width:100px
 }
+.divssa2 {
+	width:300px
+}
 .divssh {
 	height: 200px;
 }
@@ -254,6 +257,25 @@
 				</div>
 			</form>
 			<h4>查看数据库  告警  相关数据：</h4>
+		</div>
+		<div class="tab-pane fade" id="setPoint">
+			<h4>写数据请求=></h4>
+			<form class="form-inline first">
+				<div class="form-group">
+					<label for="setPoint_nodeId">nodeId:</label> <input type="text"
+						class="form-control" id="setPoint_nodeId">
+				</div>
+				<div class="form-group">
+					<label for="setPoint_value">value:</label> <input type="text"
+						class="form-control" id="setPoint_value">
+				</div>
+				<input class="btn btn-default" type="button" value="请求"
+					onclick="setPoint()"> |《》《》《》|
+			</form>
+			<div class="form-group">
+					<label for="alarmMode_result">返回结果》: </label><input type="text"
+						class="form-control divssa2" id="setPoint_result" readOnly="true">
+			</div>
 		</div>
 		<div class="tab-pane fade" id="getNodeAndPro">
 			<h4>联合测试(如已连接 请先断开连接)：</h4>

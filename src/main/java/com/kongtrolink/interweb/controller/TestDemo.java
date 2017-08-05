@@ -13,6 +13,8 @@ import com.kongtrolink.cone.message.body.AlarmModeCmd;
 import com.kongtrolink.cone.message.body.SetDynAccessMode;
 import com.kongtrolink.cone.message.body.SetDynAccessModeAck;
 import com.kongtrolink.cone.message.body.SetNodes;
+import com.kongtrolink.cone.message.body.SetPoint;
+import com.kongtrolink.cone.message.body.SetPointAck;
 import com.kongtrolink.cone.message.body.SetProperty;
 import com.kongtrolink.cone.message.body.comm.Body;
 import com.kongtrolink.cone.message.body.device.TA;
@@ -27,6 +29,8 @@ import com.kongtrolink.cone.message.body.device.TS;
 import com.kongtrolink.cone.message.body.device.TSC;
 import com.kongtrolink.cone.message.body.device.TStation;
 import com.kongtrolink.cone.message.body.login.LoginAck;
+import com.kongtrolink.cone.message.enumeration.EnumState;
+import com.kongtrolink.cone.message.enumeration.EnumType;
 import com.kongtrolink.cone.service.InterfaceFactory;
 import com.kongtrolink.cone.test.GetTestData;
 import com.kongtrolink.cone.util.CInterfaceConfig;
@@ -35,6 +39,7 @@ import com.kongtrolink.interweb.entity.common.ConnectEntity;
 import com.kongtrolink.interweb.entity.common.LoginEntity;
 import com.kongtrolink.interweb.entity.common.NodeEntity;
 import com.kongtrolink.interweb.entity.common.NodeIdEntity;
+import com.kongtrolink.interweb.entity.common.PointEntityh;
 import com.kongtrolink.interweb.entity.common.PropertyEntity;
 import com.kongtrolink.interweb.entity.cone.device.ConeTAIC;
 import com.kongtrolink.interweb.entity.cone.device.ConeTAOC;
@@ -202,6 +207,27 @@ public class TestDemo {
 		try{
 			coneMqttService.Login(fsuId, uniqueCode);
 			return new JsonResult("同步成功 - 请查看 响应数据 ");
+		}catch(Exception e){
+			  return new JsonResult(e.getMessage(), false);
+		}
+	}
+	
+	@RequestMapping("/setPoint.do")
+	public @ResponseBody JsonResult  setPoint(PointEntityh entity) throws Exception {
+		String key =entity.getKey();
+		int id = entity.getId();
+		System.out.println(key);
+		if (!ConeStaticMessageMap.configMap.containsKey(key)) {
+			return new JsonResult("该设备未连接", false);
+		}
+		try{
+			float value =Float.valueOf(entity.getValue());
+			CInterfaceConfig config = ConeStaticMessageMap.configMap.get(key);
+			InterfaceFactory factory = config.getInterfaceFactory();
+			SetPoint setPoint = new SetPoint();
+			setPoint.setData(new TA(EnumType.AO,id,value,EnumState.MAIN));
+			SetPointAck result09 = factory.SetPoint(setPoint);
+			return new JsonResult(result09.toString());
 		}catch(Exception e){
 			  return new JsonResult(e.getMessage(), false);
 		}

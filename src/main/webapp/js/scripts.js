@@ -1,6 +1,9 @@
 	$("#connect_host").val("10.0.6.135");
 	$("#connect_port").val("1234");
-
+	$("#setPoint_nodeId").val("848562389");
+	$("#setPoint_value").val("5");
+	
+	
 	/*
 	 * Fullscreen background
 	 */
@@ -74,6 +77,30 @@
 		});
 	}
 
+	function setPoint(){
+		var id = $("#setPoint_nodeId").val();
+		var value = $("#setPoint_value").val();
+		var key = $("#connect_key").val();
+		$.ajax({
+			type : 'POST',
+			url : Urlhead + "inter/test/setPoint.do",
+			data : {
+				"id" : id,
+				"value" : value,
+				"key" : key
+			},
+			success : function(result) {
+				var res = result.success;
+				if(res){
+					$("#setPoint_result").val(result.data);
+				}else{
+					alert(result.info);
+				}
+			},
+			dataType : "json"
+		});
+	}
+	
 	function getNodeAndPro(){
 		$.ajax({
 			type : 'POST',
