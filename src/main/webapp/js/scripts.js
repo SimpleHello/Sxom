@@ -74,6 +74,21 @@
 		});
 	}
 
+	function getNodeAndPro(){
+		$.ajax({
+			type : 'POST',
+			url : Urlhead + "inter/test/getNodeAndPro.do",
+			success : function(result) {
+				var res = result.success;
+				if(res){
+					$("#getNodeAndPro_result").val(result.data);
+				}else{
+					alert(result.info);
+				}
+			},
+			dataType : "json"
+		});
+	}
 	var app = angular.module('app', []);
 	app.controller('ctrl', function($scope, $http) {
 	    $scope.getNode = function(){

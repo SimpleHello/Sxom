@@ -3,6 +3,7 @@ package com.kongtrolink.interweb.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,12 +43,16 @@ import com.kongtrolink.interweb.entity.cone.device.ConeTDOC;
 import com.kongtrolink.interweb.entity.cone.device.ConeTDevice;
 import com.kongtrolink.interweb.entity.cone.device.ConeTSC;
 import com.kongtrolink.interweb.entity.cone.device.ConeTStation;
+import com.kongtrolink.interweb.mqtt.ConeMqttService;
 import com.kongtrolink.scloud.core.util.JsonResult;
 
 @Controller
 @RequestMapping("/inter/test")
 public class TestDemo {
 
+	@Autowired
+	ConeMqttService coneMqttService;
+	
 	@RequestMapping("/connect.do")
 	public @ResponseBody JsonResult  connect(ConnectEntity entity) throws Exception {
 		String host = entity.getHost();
@@ -55,6 +60,8 @@ public class TestDemo {
 		String key = host + "#" + port;
 		if (ConeStaticMessageMap.configMap.containsKey(key)) {
 			CInterfaceConfig config = ConeStaticMessageMap.configMap.get(key);
+			config.setFsuId("59408e3615bf135433292485");
+			config.setUniqueCode("TDYS");
 			config.disableServer();
 			ConeStaticMessageMap.configMap.remove(key);
 		}
@@ -180,6 +187,21 @@ public class TestDemo {
 				List<PropertyEntity> map = saveAccess(property.getValues());
 				return new JsonResult(map);
 			}
+		}catch(Exception e){
+			  return new JsonResult(e.getMessage(), false);
+		}
+	}
+	/**
+	 * FSU 登录 并 同步数据的属性值 
+	 * @param id
+	 */
+	@RequestMapping("/getNodeAndPro.do")
+	public @ResponseBody JsonResult  getData() throws Exception {
+		String fsuId = "59408e3615bf135433292485";
+		String uniqueCode = "TDYS";
+		try{
+			coneMqttService.Login(fsuId, uniqueCode);
+			return new JsonResult("同步成功 - 请查看 响应数据 ");
 		}catch(Exception e){
 			  return new JsonResult(e.getMessage(), false);
 		}

@@ -54,10 +54,7 @@ import com.kongtrolink.scloud.core.entity.cone.ConeSignal;
  */
 
 @Service("coneMqttService")
-public class ConeMqttService{
-
-	@Value("${c1.timeout}")
-	private String timeout;
+public class ConeMqttService {
 
 	@Autowired
 	private ConeNodeService coneNodeService;
@@ -87,36 +84,31 @@ public class ConeMqttService{
 	 * 
 	 * @param id
 	 */
-	public void Login(String fsuId, String uniqueCode) {
-		try {
-			ConeFsu fsu = interfaceFsuService.queryFsuById(uniqueCode, fsuId);// 数据库中获取FSU信息
-			String ip = fsu.getIp();// FSU IP
-			int port = fsu.getPort();// FSU 端口
-			String name = fsu.getUsername();// FSU 用户名
-			String password = fsu.getPassword();// FSU 密码
-			String key = ip + "#" + port;
-			if (ConeStaticMessageMap.configMap.containsKey(key)) {
-				throw new Exception("已登录");
-			}
-			CInterfaceConfig config = new CInterfaceConfig();
-			config.setUniqueCode(uniqueCode);// 传递 uniqueCode
-			config.setFsuId(fsuId);// 传递 FSU id
-			config.initServer(ip, port, Integer.valueOf(timeout == null ? "10000" : timeout));// IP与端口从FSU里面获取以及设置接口响应时间默认10秒
-			config.enbaleServer();// 启动 TCP连接
-			ConeStaticMessageMap.configMap.put(key, config);
-			InterfaceFactory factory = config.getInterfaceFactory();
-			LoginAck loginAck = factory.Login(name, password);
-			if (loginAck.getRigthMode().getType() == 0) {
-				return;// 表示没有权限
-			}
-			boolean falg = getFsuProperty(factory, uniqueCode, fsuId);// 登录之后直接获取全部属性值保存到数据中
-			if (falg) {
-				Thread.sleep(1000);// 1秒之后设置告警
-				setFsuAlarmMode(factory);// 设置 告警发送 模式
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void Login(String fsuId, String uniqueCode) throws Exception {
+		ConeFsu fsu = interfaceFsuService.queryFsuById(uniqueCode, fsuId);// 数据库中获取FSU信息
+		String ip = fsu.getIp();// FSU IP
+		int port = fsu.getPort();// FSU 端口
+		String name = fsu.getUsername();// FSU 用户名
+		String password = fsu.getPassword();// FSU 密码
+		String key = ip + "#" + port;
+		if (ConeStaticMessageMap.configMap.containsKey(key)) {
+			throw new Exception("已登录");
+		}
+		CInterfaceConfig config = new CInterfaceConfig();
+		config.setUniqueCode(uniqueCode);// 传递 uniqueCode
+		config.setFsuId(fsuId);// 传递 FSU id
+		config.initServer(ip, port,10000);// IP与端口从FSU里面获取以及设置接口响应时间默认10秒
+		config.enbaleServer();// 启动 TCP连接
+		ConeStaticMessageMap.configMap.put(key, config);
+		InterfaceFactory factory = config.getInterfaceFactory();
+		LoginAck loginAck = factory.Login(name, password);
+		if (loginAck.getRigthMode().getType() == 0) {
+			return;// 表示没有权限
+		}
+		boolean falg = getFsuProperty(factory, uniqueCode, fsuId);// 登录之后直接获取全部属性值保存到数据中
+		if (falg) {
+			Thread.sleep(4000);// 1秒之后设置告警
+			setFsuAlarmMode(factory);// 设置 告警发送 模式
 		}
 
 	}
@@ -140,7 +132,7 @@ public class ConeMqttService{
 			CInterfaceConfig config = new CInterfaceConfig();
 			config.setUniqueCode(uniqueCode);// 传递 uniqueCode
 			config.setFsuId(fsuId);// 传递 FSU id
-			config.initServer(ip, port, Integer.valueOf(timeout == null ? "10000" : timeout));// IP与端口从FSU里面获取以及设置接口响应时间默认10秒
+			config.initServer(ip, port,10000);// IP与端口从FSU里面获取以及设置接口响应时间默认10秒
 			config.enbaleServer();// 启动 TCP连接
 			ConeStaticMessageMap.configMap.put(key, config);
 			InterfaceFactory factory = config.getInterfaceFactory();
@@ -198,7 +190,7 @@ public class ConeMqttService{
 				}
 				boolean falg = getFsuProperty(factory, uniqueCode, fsuId);// 登录之后直接获取全部属性值保存到数据中
 				if (falg) {
-					Thread.sleep(1000);// 1秒之后设置告警
+					Thread.sleep(5000);// 1秒之后设置告警
 					setFsuAlarmMode(factory);// 设置 告警发送 模式
 				}
 			} else {
@@ -424,14 +416,15 @@ public class ConeMqttService{
 			setDynAccessMode.setGroupID(1);
 			setDynAccessMode.setMode(DataAccessMode.ASK_ANSWER);
 			setDynAccessMode.setPollingTime(1);
-			int[] setDynAccessModeIds = { device_c1Id }; // 取 所有设备的ID:AA.BBB.1.0,AA.BBB.2.0,AA.BBB.3.0
+			int[] setDynAccessModeIds = { device_c1Id }; // 取
+															// 所有设备的ID:AA.BBB.1.0,AA.BBB.2.0,AA.BBB.3.0
 			setDynAccessMode.setCount(1);
 			setDynAccessMode.setIds(setDynAccessModeIds);
 			SetDynAccessModeAck setDynAccessModeAck = factory.setDynAccessMode(setDynAccessMode);// 取得设备信号点的实时数据
 			if (setDynAccessModeAck != null && setDynAccessModeAck.getValues() != null
 					&& setDynAccessModeAck.getValues().length > 0) {
 				for (Body coneMonitorData : setDynAccessModeAck.getValues()) {
-					interfaceSignalService.updateValueData(coneMonitorData,uniqueCode, fsuId);
+					interfaceSignalService.updateValueData(coneMonitorData, uniqueCode, fsuId);
 				}
 			}
 		} catch (Exception e) {
@@ -460,6 +453,5 @@ public class ConeMqttService{
 			e.printStackTrace();
 		}
 	}
-
 
 }
