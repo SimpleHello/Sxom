@@ -1,8 +1,8 @@
-	$("#connect_host").val("10.0.6.135");
-	$("#connect_port").val("1234");
+	$("#connect_host").val("10.0.5.242");
+	$("#connect_port").val("55402");
+	$("#pro_nodeId").val("848564223");
 	$("#setPoint_nodeId").val("848562389");
 	$("#setPoint_value").val("5");
-	
 	
 	/*
 	 * Fullscreen background

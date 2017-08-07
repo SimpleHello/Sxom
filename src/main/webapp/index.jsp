@@ -88,19 +88,36 @@
 	<div id="myTabContent" class="tab-content">
 	<div class="tab-pane fade in active" id="info">
 			<div class="list-group div-inline ">
-			    <a href="#" class="list-group-item active">
-			        <h4 class="list-group-item-heading">
-			           	数据库配置
-			        </h4>
-			    </a>
-			    <a href="#" class="list-group-item divssh">
-			        <h4 class="list-group-item-text"> host：10.0.6.36</h4>
-			        <h4 class="list-group-item-text"> port：27017</h4>
-			        <h4 class="list-group-item-text"> 用户名：develop</h4>
-			        <h4 class="list-group-item-text"> 密码：YYtd_develop</h4>	   
-					<h4 class="list-group-item-text"> 数据库：scloud-develop</h4>
-					<hr/>
-			    </a>
+				<div class="list-group" >
+					<a href="#" class="list-group-item active">
+				        <h4 class="list-group-item-heading">
+				           	数据库配置
+				        </h4>
+				    </a>
+				    <a href="#" class="list-group-item divssh">
+				        <h4 class="list-group-item-text"> host：10.0.6.36</h4>
+				        <h4 class="list-group-item-text"> port：27017</h4>
+				        <h4 class="list-group-item-text"> 用户名：develop</h4>
+				        <h4 class="list-group-item-text"> 密码：YYtd_develop</h4>	   
+						<h4 class="list-group-item-text"> 数据库：scloud-develop</h4>
+						<hr/>
+				    </a>
+				</div>
+			    <div class="list-group">
+					<a href="#" class="list-group-item active">
+				        <h4 class="list-group-item-heading">
+				           	其他信息
+				        </h4>
+				    </a>
+				    <a href="#" class="list-group-item divssh">
+				        <h4 class="list-group-item-text"> .....</h4>
+				        <h4 class="list-group-item-text"> .....</h4>
+				        <h4 class="list-group-item-text"> .....</h4>
+				        <h4 class="list-group-item-text"> .....</h4>	   
+						<h4 class="list-group-item-text"> .....</h4>
+						<hr/>
+				    </a>
+				</div>
 			</div>
 			<div class="list-group div-inline">
 			    <a href="#" class="list-group-item active">
