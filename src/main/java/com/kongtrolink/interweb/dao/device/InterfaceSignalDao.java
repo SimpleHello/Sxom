@@ -78,6 +78,7 @@ public class InterfaceSignalDao {
 		int c1_id = signal.getC1_id();
 		double value = (double) signal.getValue();
 		Update update = new Update();
+		update.set("ctime", new Date());
 		if (value != 0) {
 			update.set("value", value);
 		}
@@ -86,10 +87,11 @@ public class InterfaceSignalDao {
 	}
 
 	public void updateSignalById(String uniqueCode, ConeSignal signal) {
-		double value = (double) signal.getValue();
+		Double value = signal.getValue();
 		double threshold =  signal.getThreshold();
 		Update update = new Update();
-		if (value != 0) {
+		update.set("ctime", new Date());
+		if (value!=null) {
 			update.set("value", value);
 		}
 		if (threshold != 0) {

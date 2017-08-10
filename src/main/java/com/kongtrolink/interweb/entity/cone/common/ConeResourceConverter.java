@@ -10,6 +10,7 @@ import com.kongtrolink.cone.message.body.device.TDIC;
 import com.kongtrolink.cone.message.body.device.TDOC;
 import com.kongtrolink.cone.message.body.device.TDevice;
 import com.kongtrolink.cone.message.body.device.TStation;
+import com.kongtrolink.cone.util.IdAnalyzeUtil;
 import com.kongtrolink.interweb.entity.cone.device.ConeTAIC;
 import com.kongtrolink.interweb.entity.cone.device.ConeTAOC;
 import com.kongtrolink.interweb.entity.cone.device.ConeTDIC;
@@ -84,40 +85,51 @@ public class ConeResourceConverter {
                 t - 信号类型（3位），左起第1位表示信号类型（如下所示）
                     0 - DI，遥信；1 - AI，遥测；2 - DO，遥控；3 - AO，遥调
                 n - 上述类型信号的序号（3位）
+       	因为信号编码不适用 当前格式 进行修改        
+       	 信号编码：0sttttxnnn
+       	 	    0 - 预留位（1位），默认为0
+                s - 局站类型（1位），默认为4）
+                tttt - c1接口中信号点ID 。。c1中 总共11位最多有 1024个
+                x - 信号类型（1位），左起第1位表示信号类型（如下所示）
+                    0 - DI，遥信；1 - AI，遥测；2 - DO，遥控；3 - AO，遥调
+                n - 上述类型信号的序号（3位）
+       	 	
      * @param taic
      * @return
      */
     public static  List<ConeSignal> convertTAICTo(TAIC taic,String deviceId,String siteId,String deviceCode,int deviceType,List<ConeSignal> listDb) {
     	List<ConeSignal> list = new ArrayList<ConeSignal>();
+    	int c1_ddd = IdAnalyzeUtil.getDefiniteId((int)taic.getId(), 3);
+    	String c1dddCode = String.format("%04d", c1_ddd);
     	if(listDb!=null&&listDb.size()>0){
     		for(ConeSignal single:listDb){
     			String code = single.getCode();
-    			String lastCode = code.substring(code.length()-6,code.length());//取最后6位来辨识 衍生出来的数据
-    			if("101001".equals(lastCode)){
+    			String lastCode = code.substring(code.length()-4,code.length());//取最后6位来辨识 衍生出来的数据
+    			if("1001".equals(lastCode)){
     				list.add(convertTAICTo(taic,0,single.getDeviceId(),single.getSiteId(),code,single.getId()));//AI
-    			}else if("001002".equals(lastCode)){
+    			}else if("0002".equals(lastCode)){
     				list.add(convertTAICTo(taic,11,single.getDeviceId(),single.getSiteId(),code,single.getId()));//AI
-    			}else if("001003".equals(lastCode)){
+    			}else if("0003".equals(lastCode)){
     				list.add(convertTAICTo(taic,12,single.getDeviceId(),single.getSiteId(),code,single.getId()));//AI
-    			}else if("001004".equals(lastCode)){
+    			}else if("0004".equals(lastCode)){
     				list.add(convertTAICTo(taic,21,single.getDeviceId(),single.getSiteId(),code,single.getId()));//AI
-    			}else if("001005".equals(lastCode)){
+    			}else if("0005".equals(lastCode)){
     				list.add(convertTAICTo(taic,22,single.getDeviceId(),single.getSiteId(),code,single.getId()));//AI
-    			}else if("001006".equals(lastCode)){
+    			}else if("0006".equals(lastCode)){
     				list.add(convertTAICTo(taic,31,single.getDeviceId(),single.getSiteId(),code,single.getId()));//AI
-    			}else if("001007".equals(lastCode)){
+    			}else if("0007".equals(lastCode)){
     				list.add(convertTAICTo(taic,32,single.getDeviceId(),single.getSiteId(),code,single.getId()));//AI
     			}
     		}
     	}else{
-    		String singalCode = deviceCode+"04"+String.format("%02d", deviceType);
-        	list.add(convertTAICTo(taic,0,deviceId,siteId,singalCode+"101"+"001",null));//AI
-        	list.add(convertTAICTo(taic,11,deviceId,siteId,singalCode+"001"+"002",null));//AI衍生的DI信息
-        	list.add(convertTAICTo(taic,12,deviceId,siteId,singalCode+"001"+"003",null));//AI衍生的DI信息
-        	list.add(convertTAICTo(taic,21,deviceId,siteId,singalCode+"001"+"004",null));//AI衍生的DI信息
-        	list.add(convertTAICTo(taic,22,deviceId,siteId,singalCode+"001"+"005",null));//AI衍生的DI信息
-        	list.add(convertTAICTo(taic,31,deviceId,siteId,singalCode+"001"+"006",null));//AI衍生的DI信息
-        	list.add(convertTAICTo(taic,32,deviceId,siteId,singalCode+"001"+"007",null));//AI衍生的DI信息
+    		String singalCode = deviceCode+"04"+c1dddCode;
+        	list.add(convertTAICTo(taic,0,deviceId,siteId,singalCode+"1001",null));//AI
+        	list.add(convertTAICTo(taic,11,deviceId,siteId,singalCode+"0002",null));//AI衍生的DI信息
+        	list.add(convertTAICTo(taic,12,deviceId,siteId,singalCode+"0003",null));//AI衍生的DI信息
+        	list.add(convertTAICTo(taic,21,deviceId,siteId,singalCode+"0004",null));//AI衍生的DI信息
+        	list.add(convertTAICTo(taic,22,deviceId,siteId,singalCode+"0005",null));//AI衍生的DI信息
+        	list.add(convertTAICTo(taic,31,deviceId,siteId,singalCode+"0006",null));//AI衍生的DI信息
+        	list.add(convertTAICTo(taic,32,deviceId,siteId,singalCode+"0007",null));//AI衍生的DI信息
     	}
     	
         return list;
@@ -194,7 +206,9 @@ public class ConeResourceConverter {
      */
     public static  ConeSignal convertTDICTo(TDIC tdic,String deviceId,String siteId,String deviceCode,int typeCode) {
     	ConeSignal single = new ConeSignal();
-    	String singalCode = deviceCode+"04"+String.format("%02d", typeCode)+"001001";
+    	int c1_ddd = IdAnalyzeUtil.getDefiniteId((int)tdic.getId(), 3);
+    	String c1dddCode = String.format("%04d", c1_ddd);
+    	String singalCode = deviceCode+"04"+c1dddCode+"0001";//0 - DI，遥信；1 - AI，遥测；2 - DO，遥控；3 - AO，遥调
     	single.setDeviceId(deviceId);
     	single.setSiteId(siteId);
     	single.setCode(singalCode);
@@ -217,7 +231,9 @@ public class ConeResourceConverter {
      * @return
      */
     public static  ConeSignal convertTAOCTo(TAOC taoc,String deviceId,String siteId,String deviceCode,int typeCode) {
-    	String singalCode = deviceCode+"04"+String.format("%02d", typeCode)+"301001";
+    	int c1_ddd = IdAnalyzeUtil.getDefiniteId((int)taoc.getId(), 3);
+    	String c1dddCode = String.format("%04d", c1_ddd);
+    	String singalCode = deviceCode+"04"+c1dddCode+"3001";
     	ConeSignal single = new ConeSignal();
     	single.setDeviceId(deviceId);
     	single.setSiteId(siteId);
@@ -239,7 +255,9 @@ public class ConeResourceConverter {
      * @return
      */
     public  static ConeSignal convertTDOCTo(TDOC tdoc,String deviceId,String siteId,String deviceCode,int typeCode) {
-    	String singalCode = deviceCode+"04"+String.format("%02d", typeCode)+"201001";
+    	int c1_ddd = IdAnalyzeUtil.getDefiniteId((int)tdoc.getId(), 3);
+    	String c1dddCode = String.format("%04d", c1_ddd);
+    	String singalCode = deviceCode+"04"+c1dddCode+"2001";
     	ConeSignal single = new ConeSignal();
     	single.setDeviceId(deviceId);
     	single.setSiteId(siteId);

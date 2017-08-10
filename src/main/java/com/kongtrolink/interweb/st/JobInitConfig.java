@@ -24,8 +24,8 @@ public class JobInitConfig {
 		if(list!=null&&list.size()>0){
 			return list;
 		}
-		list.add(new JobEntity("ConeHistoryTask","历史数据更新","0 * * * * ?"));//历史数据更新 -- 1分钟执行1次
-		list.add(new JobEntity("ConePropertyTask","数据属性修改轮询","0/30 * * * * ?"));// 数据属性修改轮询 --30秒执行1次
+//		list.add(new JobEntity("ConeHistoryTask","历史数据更新","0 * * * * ?"));//历史数据更新 -- 1分钟执行1次
+//		list.add(new JobEntity("ConePropertyTask","数据属性修改轮询","0/30 * * * * ?"));// 数据属性修改轮询 --30秒执行1次
         return list;
 	}
 }

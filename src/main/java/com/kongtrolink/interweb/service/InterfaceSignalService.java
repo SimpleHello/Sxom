@@ -151,6 +151,6 @@ public interface InterfaceSignalService {
 	/**
 	 * 根据修改的值来处理 DO 
 	 */
-	public MonitorDataCone getMonitorDataCone(String uniqueCode, ConeSignal signal);
+	public Body getBodyCone(String uniqueCode, ConeSignal signal);
 	
 }

@@ -1,4 +1,4 @@
-	$("#connect_host").val("10.0.5.242");
+	$("#connect_host").val("10.0.7.106");
 	$("#connect_port").val("55402");
 	$("#pro_nodeId").val("848564223");
 	$("#setPoint_nodeId").val("848562389");

@@ -72,6 +72,9 @@
 			    <div class="col-lg-2">
 			    	 <input type="text" class="connect_key" id="connect_key" readOnly="true">
 			    </div>
+			    <div class="col-lg-2">
+			    	  <h4><a href="index2.jsp">其他联合测试</a></h4>
+			    </div>
 			  </div>
 		</form>
 	</div>
@@ -83,7 +86,6 @@
 		<li><a href="#accessMode" data-toggle="tab">set_access_mode 一问一答测试</a></li>
 		<li><a href="#alarmMode" data-toggle="tab">send_alarm 告警模式设置测试</a></li>
 		<li><a href="#setPoint" data-toggle="tab">写数据 测试</a></li>
-		<li><a href="#getNodeAndPro" data-toggle="tab">联合测试</a></li>
 	</ul>
 	<div id="myTabContent" class="tab-content">
 	<div class="tab-pane fade in active" id="info">
@@ -293,36 +295,6 @@
 					<label for="alarmMode_result">返回结果》: </label><input type="text"
 						class="form-control divssa2" id="setPoint_result" readOnly="true">
 			</div>
-		</div>
-		<div class="tab-pane fade" id="getNodeAndPro">
-			<h4>联合测试(如已连接 请先断开连接)：</h4>
-			<h5 style="color:red">(请先在 TDYS_fsu 中 修改 59408e3615bf135433292485 id的相关IP,端口,用户名,密码)</h5>
-			<h5>1：FSU连接  = 用户登录</h5>
-			<h5>2：通过getNode接口 取得 id列表</h5>
-			<h5>3：根据不同的ID级别 获取响应的属性列表</h5>
-			<h5>4：发送告警模式</h5>
-			<form>
-				<input class="btn btn-default" type="button" value="请求"
-					onclick="getNodeAndPro()"> |《》《》《》|
-				<div class="form-group">
-					<label class="first" for="alarmMode_result">该接口sleep较多 请耐心等待(具体业务时将异步执行)返回结果》: </label>
-					<input type="text" class="form-control" id="getNodeAndPro_result" readOnly="true">
-				</div>
-			</form>
-			<h4>查看数据库相关数据：</h4>
-			<h5>基本说明 >> 表说明 1,2;常用查询：</h5>
-			<h5>db.TDYS_alarm.find({"c1_id":{$gt:0}})  //查询告警表</h5>
-			<h5>db.TDYS_device.find({"c1_id":{$gt:0}}) //查询设备表</h5>	   
-			<h5>db.TDYS_signal.find({"c1_id":{$gt:0}}) //查询信号表</h5>
-			<h5>db.TDYS_c1_data.find({});</h5>
-			<h5>db.TDYS_c1_nodes.find({});</h5>
-			<h5>db.TDYS_c1_taic.find({});</h5>
-			<h5>db.TDYS_c1_talarm..find({});</h5>
-			<h5>db.TDYS_c1_taoc.find({});</h5>
-			<h5>db.TDYS_c1_tdevice.find({});</h5>
-			<h5>db.TDYS_c1_tdic.find({});</h5>
-			<h5>db.TDYS_c1_tdoc.find({});</h5>
-			<h5>db.TDYS_c1_tstation.find({});</h5>
 		</div>
 	</div>
 

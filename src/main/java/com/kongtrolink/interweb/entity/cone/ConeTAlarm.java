@@ -13,6 +13,8 @@ public class ConeTAlarm extends ConeBaseEntity {
 	 */
 	private static final long serialVersionUID = -2538505337229949273L;
 	
+	public  static final String NAMESPACE="_c1_talarm";
+	
 	private long c1_id;                  // 数据标识ID, 监控对象ID数据格式为：BBBB.CC.DDD
     private EnumState status; //状态
     private String description;       //告警的事件描述 ; BodyStatic.EVENT_LENGTH

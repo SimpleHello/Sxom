@@ -65,13 +65,13 @@ public class TestDemo {
 		String key = host + "#" + port;
 		if (ConeStaticMessageMap.configMap.containsKey(key)) {
 			CInterfaceConfig config = ConeStaticMessageMap.configMap.get(key);
-			config.setFsuId("59408e3615bf135433292485");
-			config.setUniqueCode("TDYS");
 			config.disableServer();
 			ConeStaticMessageMap.configMap.remove(key);
 		}
 		try{
 			CInterfaceConfig config = new CInterfaceConfig();
+			config.setFsuId("59408e3615bf135433292485"); //此设定 要在 initServer之前
+			config.setUniqueCode("TDYS"); //此设定 要在 initServer之前
 			config.initServer(host, port, 10000);// IP与端口从FSU里面获取以及设置接口响应时间默认10秒
 			config.enbaleServer();// 启动 TCP连接
 			ConeStaticMessageMap.configMap.put(key, config);

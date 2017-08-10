@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.kongtrolink.cone.message.body.MonitorDataCone;
 import com.kongtrolink.cone.message.body.comm.Body;
+import com.kongtrolink.cone.message.body.device.TA;
+import com.kongtrolink.cone.message.body.device.TD;
 import com.kongtrolink.cone.message.enumeration.EnumState;
 import com.kongtrolink.cone.message.enumeration.EnumType;
 import com.kongtrolink.interweb.dao.device.InterfaceSignalDao;
@@ -169,24 +171,34 @@ public class InterfaceSignalServiceImpl implements InterfaceSignalService {
 		interfaceSingleDao.updateSignalById(uniqueCode, signal);
 	}
 
+	private Body getEnumType(String str,ConeSignal signal,String alarmLevel){
+		Double value = signal.getValue();
+		double val = value ==null?0:value.doubleValue();
+		switch(str){
+			case "遥信":
+				TD tdi = new TD(EnumType.DI,signal.getC1_id(),(short)val,EnumState.toType(Integer.valueOf(alarmLevel))) ;
+				return tdi;
+			case "遥测":
+				TA tai = new TA(EnumType.AI,signal.getC1_id(),(float)val,EnumState.toType(Integer.valueOf(alarmLevel)));
+				return tai;
+			case "遥控":
+				TD tdo = new TD(EnumType.DO,signal.getC1_id(),(short)val,EnumState.toType(Integer.valueOf(alarmLevel))) ;
+				return tdo;
+			case "遥调":
+				TA tao = new TA(EnumType.AO,signal.getC1_id(),(float)val,EnumState.toType(Integer.valueOf(alarmLevel)));
+				return tao;
+		}
+		return null;
+	}
+
 	@Override
-	public MonitorDataCone getMonitorDataCone(String uniqueCode, ConeSignal signal) {
+	public Body getBodyCone(String uniqueCode, ConeSignal signal) {
 		// TODO Auto-generated method stub
 		String type = signal.getType();
 		String alarmLevel = signal.getAlarmLevel();
 		alarmLevel = (alarmLevel==null?"0":alarmLevel);
-		MonitorDataCone data = new MonitorDataCone(getEnumType(type),(long)signal.getC1_id(),signal.getValue().longValue(),EnumState.toType(Integer.valueOf(alarmLevel)));
+		Body data = getEnumType(type,signal,alarmLevel);
 		return data;
-	}
-	
-	private EnumType getEnumType(String str){
-		switch(str){
-			case "遥信":return EnumType.DI;
-			case "遥测":return EnumType.AI;
-			case "遥控":return EnumType.DO;
-			case "遥调":return EnumType.AO;
-		}
-		return EnumType.AI;
 	}
 	
 
