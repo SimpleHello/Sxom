@@ -58,7 +58,7 @@ public class ConeWebJobStart {
     public void  init(){  
 		LOGGER.info("##接口服务 定时任务 启动");
 //		
-//		startConnectFsu();//连接所有 c1_id不为0 FSU
+		startConnectFsu();//连接所有 c1_id不为0 FSU
 //		
 //		List<JobEntity> list = JobInitConfig.getList();
 //		List<JobEntity> dblist = jobService.findAll();

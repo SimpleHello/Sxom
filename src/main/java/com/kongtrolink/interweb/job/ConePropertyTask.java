@@ -95,6 +95,7 @@ public class ConePropertyTask implements Job {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		LOGGER.info("ConePropertyTask #轮询属性修改 #  执行完成!!");
 	}

@@ -151,7 +151,7 @@ public class TestDemo2 {
 	@RequestMapping("/startProperty.do")
 	public @ResponseBody JsonResult startProperty() throws Exception {
 		try {
-			quartzManager.removeJob(new JobEntity("ConePropertyTask", "数据属性修改轮询", "0/20 * * * * ?"));
+			quartzManager.addJob(new JobEntity("ConePropertyTask", "数据属性修改轮询", "0/20 * * * * ?"));
 			return new JsonResult("开始任务.... ");
 		} catch (Exception e) {
 			e.printStackTrace();

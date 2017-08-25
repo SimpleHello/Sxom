@@ -79,9 +79,7 @@ public class InterfaceSignalDao {
 		double value = (double) signal.getValue();
 		Update update = new Update();
 		update.set("ctime", new Date());
-		if (value != 0) {
-			update.set("value", value);
-		}
+		update.set("value", value);
 		mongoTemplate.updateMulti(new Query(Criteria.where("c1_id").is(c1_id).andOperator(Criteria.where("c1_id").gt(0))), update,
 				uniqueCode + CollectionSuffix.SIGNAL);
 	}
